@@ -7,9 +7,10 @@ export default function SettingsPanel({ onClose, onClearAll, onResetSeries, weig
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal settings-modal" onClick={e => e.stopPropagation()}>
+      <div className="modal-sheet settings-modal" onClick={e => e.stopPropagation()}>
+        <div className="modal-handle"><div className="modal-handle-bar" /></div>
         <div className="modal-header">
-          <h2>Ajustes</h2>
+          <div className="modal-title">Ajustes</div>
           <button className="modal-close" onClick={onClose}><X size={22} /></button>
         </div>
 
