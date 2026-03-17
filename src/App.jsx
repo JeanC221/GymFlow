@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { Plus, Settings, Search, X, GripVertical, TrendingUp } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Plus, Settings, Search, X, GripVertical, TrendingUp, Flame } from 'lucide-react';
 import { useLocalStorage } from './hooks/useLocalStorage';
-import { createDay, cloneDay, createId } from './utils';
+import { createDay, cloneDay, createId, calculateStreak } from './utils';
 import DayCard from './components/DayCard';
 import DayDetail from './components/DayDetail';
 import AddDayModal from './components/AddDayModal';
@@ -58,6 +58,19 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const [history, setHistory] = useLocalStorage('gym-history', []);
+  const [viewTransition, setViewTransition] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [pullState, setPullState] = useState({ pulling: false, distance: 0, refreshing: false });
+  const scrollRef = useRef(null);
+  const pullStartY = useRef(0);
+
+  const streak = calculateStreak(history);
+
+  // Simulate initial load
+  useEffect(() => {
+    const t = setTimeout(() => setIsLoading(false), 600);
+    return () => clearTimeout(t);
+  }, []);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -77,7 +90,7 @@ export default function App() {
       setDays(prev =>
         prev.map(d =>
           d.id === editingDay.id
-            ? { ...d, name: data.name, routine: data.routine, isRestDay: data.isRestDay, notes: data.notes }
+            ? { ...d, name: data.name, routine: data.routine, isRestDay: data.isRestDay, notes: data.notes, emoji: data.emoji || '' }
             : d
         )
       );
@@ -85,6 +98,7 @@ export default function App() {
     } else {
       const newDay = createDay(data.name, data.routine, data.isRestDay);
       newDay.notes = data.notes || '';
+      newDay.emoji = data.emoji || '';
       setDays(prev => [...prev, newDay]);
     }
   };
@@ -158,25 +172,71 @@ export default function App() {
 
   const openDay = (day) => {
     setSelectedDayId(day.id);
+    setViewTransition('slide-in');
     setCurrentView('detail');
   };
 
+  const handleBack = () => {
+    setViewTransition('slide-out');
+    setTimeout(() => {
+      setCurrentView('list');
+      setViewTransition('');
+    }, 280);
+  };
+
+  // Pull-to-refresh handlers
+  const handlePullStart = useCallback((e) => {
+    if (scrollRef.current && scrollRef.current.scrollTop === 0) {
+      pullStartY.current = e.touches[0].clientY;
+    }
+  }, []);
+
+  const handlePullMove = useCallback((e) => {
+    if (!pullStartY.current || pullState.refreshing) return;
+    const dist = e.touches[0].clientY - pullStartY.current;
+    if (dist > 0 && scrollRef.current && scrollRef.current.scrollTop === 0) {
+      setPullState(prev => ({ ...prev, pulling: true, distance: Math.min(dist * 0.5, 80) }));
+    }
+  }, [pullState.refreshing]);
+
+  const handlePullEnd = useCallback(() => {
+    if (pullState.distance > 50) {
+      setPullState({ pulling: false, distance: 50, refreshing: true });
+      setTimeout(() => {
+        setPullState({ pulling: false, distance: 0, refreshing: false });
+      }, 800);
+    } else {
+      setPullState({ pulling: false, distance: 0, refreshing: false });
+    }
+    pullStartY.current = 0;
+  }, [pullState.distance]);
+
   if (currentView === 'detail' && selectedDay) {
     return (
-      <DayDetail
-        day={selectedDay}
-        onBack={() => setCurrentView('list')}
-        onUpdateDay={handleUpdateDay}
-        weightUnit={weightUnit}
-        theme={theme}
-      />
+      <div className={`view-wrapper ${viewTransition}`}>
+        <DayDetail
+          day={selectedDay}
+          onBack={handleBack}
+          onUpdateDay={handleUpdateDay}
+          weightUnit={weightUnit}
+          theme={theme}
+        />
+      </div>
     );
   }
 
   return (
     <div className="screen" data-theme={theme}>
       <div className="header">
-        <div className="header-title">Mi Rutina</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div className="header-title">Mi Rutina</div>
+          {streak > 0 && (
+            <div className="streak-badge">
+              <Flame size={14} />
+              <span>{streak}</span>
+            </div>
+          )}
+        </div>
         <div style={{ display: 'flex', gap: 4 }}>
           {days.length > 0 && (
             <button style={{ padding: 4 }} onClick={() => setShowProgress(true)}>
@@ -212,7 +272,22 @@ export default function App() {
         </div>
       )}
 
-      {days.length === 0 ? (
+      {isLoading ? (
+        <div className="scrollable">
+          <div className="days-list">
+            {[1, 2, 3].map(i => (
+              <div key={i} className="skeleton-card">
+                <div className="skeleton-avatar shimmer" />
+                <div className="skeleton-content">
+                  <div className="skeleton-line w60 shimmer" />
+                  <div className="skeleton-line w40 shimmer" />
+                  <div className="skeleton-line w30 shimmer" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : days.length === 0 ? (
         <EmptyState type="days" />
       ) : filteredDays.length === 0 ? (
         <div className="empty-state">
@@ -221,7 +296,21 @@ export default function App() {
           <div className="empty-state-desc">No hay días que coincidan con "{searchQuery}"</div>
         </div>
       ) : (
-        <div className="scrollable">
+        <div
+          className="scrollable"
+          ref={scrollRef}
+          onTouchStart={handlePullStart}
+          onTouchMove={handlePullMove}
+          onTouchEnd={handlePullEnd}
+        >
+          {/* Pull to refresh indicator */}
+          <div
+            className={`pull-indicator ${pullState.refreshing ? 'refreshing' : ''}`}
+            style={{ height: pullState.distance, opacity: pullState.distance > 10 ? 1 : 0 }}
+          >
+            <div className={`pull-spinner ${pullState.refreshing ? 'spinning' : ''}`} />
+          </div>
+
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={filteredDays.map(d => d.id)} strategy={verticalListSortingStrategy}>
               <div className="days-list">
@@ -249,7 +338,7 @@ export default function App() {
       )}
 
       <div className="fab-container">
-        <button className="fab" onClick={() => { setEditingDay(null); setShowAddDay(true); }}>
+        <button className="fab ripple" onClick={() => { setEditingDay(null); setShowAddDay(true); }}>
           <Plus />
         </button>
       </div>

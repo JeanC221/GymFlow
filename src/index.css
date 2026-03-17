@@ -245,3 +245,228 @@ button { border: none; background: none; cursor: pointer; font-family: 'DM Sans'
 .progress-bar { width: 100%; max-width: 32px; background: var(--gradient-fab); border-radius: 6px 6px 0 0; transition: height 0.3s ease; }
 .progress-bar-label { font-size: 9px; color: var(--text-muted); white-space: nowrap; }
 .progress-summary { display: flex; align-items: center; gap: 6px; margin-top: 12px; padding: 8px 12px; background: var(--bg-elevated); border-radius: 8px; font-size: 12px; color: var(--text-secondary); }
+
+/* ==================== Day Card Avatar ==================== */
+.day-card-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+.day-card-avatar-default {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+}
+
+/* ==================== Day Card Progress Bar ==================== */
+.day-card-progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+.day-card-progress-track {
+  flex: 1;
+  height: 4px;
+  background: var(--border-subtle);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.day-card-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--accent-blue);
+  transition: width 0.4s ease;
+}
+.day-card-progress-fill.complete {
+  background: var(--accent-green);
+}
+.day-card-progress-text {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  min-width: 32px;
+  text-align: right;
+}
+
+/* ==================== Emoji Picker ==================== */
+.emoji-picker {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+}
+.emoji-option {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-elevated);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.emoji-option:hover { background: var(--border-subtle); }
+.emoji-option.active {
+  border-color: var(--accent-blue);
+  background: rgba(59, 130, 246, 0.15);
+}
+
+/* ==================== Streak Badge ==================== */
+.streak-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: rgba(255, 181, 71, 0.15);
+  color: var(--accent-amber);
+  font-size: 13px;
+  font-weight: 700;
+  margin-left: 10px;
+}
+
+/* ==================== View Slide Transitions ==================== */
+.view-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+.view-wrapper.slide-in {
+  animation: slideInRight 0.28s ease-out forwards;
+}
+.view-wrapper.slide-out {
+  animation: slideOutRight 0.28s ease-in forwards;
+}
+@keyframes slideInRight {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideOutRight {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+
+/* ==================== Skeleton Loading ==================== */
+.skeleton-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border-radius: var(--radius-card);
+}
+.skeleton-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: var(--bg-elevated);
+  flex-shrink: 0;
+}
+.skeleton-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.skeleton-line {
+  height: 12px;
+  border-radius: 6px;
+  background: var(--bg-elevated);
+}
+.skeleton-line.w60 { width: 60%; }
+.skeleton-line.w40 { width: 40%; }
+.skeleton-line.w30 { width: 30%; }
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%);
+  animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+[data-theme="light"] .shimmer::after {
+  background: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.04) 50%, transparent 100%);
+}
+
+/* ==================== Ripple Effect ==================== */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+.ripple::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 10%, transparent 10.01%);
+  background-size: 1000% 1000%;
+  background-position: 50% 50%;
+  opacity: 0;
+  transition: background-size 0.5s, opacity 0.4s;
+  pointer-events: none;
+}
+.ripple:active::after {
+  background-size: 0% 0%;
+  opacity: 1;
+  transition: 0s;
+}
+
+/* ==================== Pull to Refresh ==================== */
+.pull-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: height 0.2s, opacity 0.2s;
+}
+.pull-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--border-subtle);
+  border-top-color: var(--accent-blue);
+  border-radius: 50%;
+}
+.pull-spinner.spinning {
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==================== Gradient Border on Exercise Cards ==================== */
+.exercise-card-gradient {
+  position: relative;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  background-image: none;
+}
+.exercise-card-gradient::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--radius-card);
+  padding: 1px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo), var(--accent-green));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}

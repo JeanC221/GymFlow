@@ -1,5 +1,6 @@
 import { Dumbbell, ChevronRight, Moon, StickyNote, Copy } from 'lucide-react';
 import { SwipeableItem } from './ConfirmDialog';
+import { getDayProgress } from '../utils';
 
 const BADGE_COLORS = {
   blue: { bg: '#3B82F620', text: 'var(--accent-blue)' },
@@ -14,12 +15,23 @@ export default function DayCard({ day, index, onClick, onEdit, onDelete, onDupli
   const colorKey = COLOR_KEYS[index % COLOR_KEYS.length];
   const badgeColor = BADGE_COLORS[colorKey];
   const exerciseCount = day.exercises?.length || 0;
+  const progress = getDayProgress(day);
+  const progressPct = Math.round(progress * 100);
 
   const card = (
     <div
       className={`day-card ${day.isRestDay ? 'rest-day' : ''}`}
       onClick={onClick}
     >
+      {/* Emoji avatar */}
+      {day.emoji ? (
+        <div className="day-card-avatar">{day.emoji}</div>
+      ) : (
+        <div className="day-card-avatar day-card-avatar-default" style={{ color: badgeColor.text, background: badgeColor.bg }}>
+          {day.isRestDay ? <Moon size={18} /> : <Dumbbell size={18} />}
+        </div>
+      )}
+
       <div className="day-card-content">
         <div className="day-card-name">{day.name}</div>
         {!day.isRestDay && day.routine && (
@@ -28,8 +40,7 @@ export default function DayCard({ day, index, onClick, onEdit, onDelete, onDupli
         <div className="day-card-badges">
           {day.isRestDay ? (
             <div className="day-card-badge" style={{ background: 'var(--rest-day)', color: 'var(--accent-coral)' }}>
-              <Moon size={12} />
-              Día de descanso
+              Descanso
             </div>
           ) : (
             <div className="day-card-badge" style={{ background: badgeColor.bg, color: badgeColor.text }}>
@@ -42,6 +53,21 @@ export default function DayCard({ day, index, onClick, onEdit, onDelete, onDupli
             </div>
           )}
         </div>
+
+        {/* Progress bar */}
+        {!day.isRestDay && exerciseCount > 0 && (
+          <div className="day-card-progress">
+            <div className="day-card-progress-track">
+              <div
+                className="day-card-progress-fill"
+                style={{ width: `${progressPct}%`, background: progressPct === 100 ? 'var(--accent-green)' : 'var(--accent-blue)' }}
+              />
+            </div>
+            <span className="day-card-progress-text" style={{ color: progressPct === 100 ? 'var(--accent-green)' : 'var(--text-muted)' }}>
+              {progressPct}%
+            </span>
+          </div>
+        )}
       </div>
       <ChevronRight size={20} color="var(--text-muted)" />
     </div>

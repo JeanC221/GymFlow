@@ -37,7 +37,7 @@ export default function ExerciseCard({
   };
 
   const content = (
-    <div className={`exercise-card${showCelebrate ? ' all-complete' : ''}`}>
+    <div className={`exercise-card${showCelebrate ? ' all-complete' : ''}${expanded ? ' exercise-card-gradient' : ''}`}>
       <div className="exercise-header" onClick={() => setExpanded(!expanded)}>
         <div className="exercise-header-left">
           <Dumbbell size={18} color={color} />
