@@ -72,7 +72,7 @@ button { border: none; background: none; cursor: pointer; font-family: 'DM Sans'
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
 
-.modal-sheet { background: var(--bg-card); border-radius: 24px 24px 0 0; width: 100%; max-height: 85vh; max-height: 85dvh; overflow-y: auto; padding: 8px 24px calc(32px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 24px; animation: slideUp 0.3s ease-out; }
+.modal-sheet { background: var(--bg-card); border-radius: 24px 24px 0 0; width: 100%; max-height: 85vh; max-height: 85dvh; overflow: hidden; padding: 8px 24px calc(32px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 24px; animation: slideUp 0.3s ease-out; }
 .modal-sheet .btn-primary { flex-shrink: 0; }
 .modal-overlay.closing .modal-sheet { animation: slideDown 0.3s ease-out forwards; }
 @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -146,8 +146,8 @@ button { border: none; background: none; cursor: pointer; font-family: 'DM Sans'
 .series-config-input { flex: 1; display: flex; align-items: center; gap: 4px; padding: 0 12px; height: 44px; border-radius: 10px; background: var(--bg-elevated); border: 1px solid var(--border-subtle); }
 
 /* Settings panel */
-.settings-modal { max-height: 80vh; }
-.settings-list { display: flex; flex-direction: column; gap: 2px; margin-top: 8px; }
+.settings-modal { max-height: 80vh; max-height: 80dvh; }
+.settings-list { display: flex; flex-direction: column; gap: 2px; margin-top: 8px; flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 .settings-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--border-subtle); }
 .settings-item:last-child { border-bottom: none; }
 .settings-item-left { display: flex; align-items: center; gap: 12px; font-size: 15px; color: var(--text-primary); }
