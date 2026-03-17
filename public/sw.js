@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mi-rutina-v2';
+const CACHE_NAME = 'mi-rutina-v3';
 const PRECACHE = [
   '/',
   '/index.html',
