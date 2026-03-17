@@ -7,14 +7,17 @@ import DayDetail from './components/DayDetail';
 import AddDayModal from './components/AddDayModal';
 import EmptyState from './components/EmptyState';
 import ConfirmDialog from './components/ConfirmDialog';
+import SettingsPanel from './components/SettingsPanel';
 
 export default function App() {
   const [days, setDays] = useLocalStorage('gym-days', []);
+  const [weightUnit, setWeightUnit] = useLocalStorage('gym-weight-unit', 'kg');
   const [currentView, setCurrentView] = useState('list');
   const [selectedDayId, setSelectedDayId] = useState(null);
   const [showAddDay, setShowAddDay] = useState(false);
   const [editingDay, setEditingDay] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [showSettings, setShowSettings] = useState(false);
 
   const selectedDay = days.find(d => d.id === selectedDayId);
 
@@ -23,7 +26,7 @@ export default function App() {
       setDays(prev =>
         prev.map(d =>
           d.id === editingDay.id
-            ? { ...d, name: data.name, routine: data.routine, isRestDay: data.isRestDay, exercises: data.isRestDay ? [] : d.exercises }
+            ? { ...d, name: data.name, routine: data.routine, isRestDay: data.isRestDay }
             : d
         )
       );
@@ -44,6 +47,21 @@ export default function App() {
     setDays(prev => prev.map(d => d.id === updatedDay.id ? updatedDay : d));
   };
 
+  const handleClearAll = () => {
+    setDays([]);
+    setShowSettings(false);
+  };
+
+  const handleResetSeries = () => {
+    setDays(prev => prev.map(day => ({
+      ...day,
+      exercises: day.exercises.map(ex => ({
+        ...ex,
+        series: ex.series.map(s => ({ ...s, completed: false }))
+      }))
+    })));
+  };
+
   const openDay = (day) => {
     setSelectedDayId(day.id);
     setCurrentView('detail');
@@ -55,6 +73,7 @@ export default function App() {
         day={selectedDay}
         onBack={() => setCurrentView('list')}
         onUpdateDay={handleUpdateDay}
+        weightUnit={weightUnit}
       />
     );
   }
@@ -63,7 +82,7 @@ export default function App() {
     <div className="screen">
       <div className="header">
         <div className="header-title">Mi Rutina</div>
-        <button style={{ padding: 4 }}>
+        <button style={{ padding: 4 }} onClick={() => setShowSettings(true)}>
           <Settings size={24} color="var(--text-secondary)" />
         </button>
       </div>
@@ -107,6 +126,16 @@ export default function App() {
           message="Estas seguro de que quieres eliminar este dia y todos sus ejercicios? Esta accion no se puede deshacer."
           onConfirm={handleDeleteDay}
           onCancel={() => setConfirmDelete(null)}
+        />
+      )}
+
+      {showSettings && (
+        <SettingsPanel
+          onClose={() => setShowSettings(false)}
+          onClearAll={handleClearAll}
+          onResetSeries={handleResetSeries}
+          weightUnit={weightUnit}
+          onChangeUnit={setWeightUnit}
         />
       )}
     </div>

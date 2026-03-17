@@ -32,7 +32,7 @@ export function createExercise(name, seriesCount, seriesConfig, notes) {
   };
 }
 
-export function getExerciseSummary(exercise) {
+export function getExerciseSummary(exercise, unit = 'kg') {
   const count = exercise.series.length;
   const weights = exercise.series.map(s => s.weight).filter(Boolean);
   const reps = exercise.series.map(s => s.reps).filter(Boolean);
@@ -41,13 +41,17 @@ export function getExerciseSummary(exercise) {
     return `${count} series`;
   }
 
-  const minW = Math.min(...weights.map(Number));
-  const maxW = Math.max(...weights.map(Number));
-  const minR = Math.min(...reps.map(Number));
-  const maxR = Math.max(...reps.map(Number));
+  const parts = [];
+  if (weights.length > 0) {
+    const minW = Math.min(...weights.map(Number));
+    const maxW = Math.max(...weights.map(Number));
+    parts.push(minW === maxW ? `${minW} ${unit}` : `${minW}-${maxW} ${unit}`);
+  }
+  if (reps.length > 0) {
+    const minR = Math.min(...reps.map(Number));
+    const maxR = Math.max(...reps.map(Number));
+    parts.push(minR === maxR ? `${minR} reps` : `${minR}-${maxR} reps`);
+  }
 
-  const weightStr = minW === maxW ? `${minW} kg` : `${minW}-${maxW} kg`;
-  const repsStr = minR === maxR ? `${minR} reps` : `${minR}-${maxR} reps`;
-
-  return `${count} series · ${weightStr} × ${repsStr}`;
+  return `${count} series · ${parts.join(' × ')}`;
 }

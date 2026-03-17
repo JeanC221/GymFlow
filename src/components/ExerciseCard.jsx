@@ -6,6 +6,7 @@ import { SwipeableItem } from './ConfirmDialog';
 export default function ExerciseCard({
   exercise,
   index,
+  weightUnit = 'kg',
   onToggleSeries,
   onUpdateSeries,
   onAddSeries,
@@ -14,7 +15,7 @@ export default function ExerciseCard({
 }) {
   const [expanded, setExpanded] = useState(index === 0);
   const color = getExerciseColor(index);
-  const summary = getExerciseSummary(exercise);
+  const summary = getExerciseSummary(exercise, weightUnit);
 
   const content = (
     <div className="exercise-card">

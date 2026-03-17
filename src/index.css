@@ -143,6 +143,26 @@ button { border: none; background: none; cursor: pointer; font-family: 'DM Sans'
 .series-config-row { display: flex; align-items: center; gap: 8px; }
 .series-config-num { width: 28px; height: 28px; border-radius: 14px; background: var(--accent-blue); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #FFFFFF; flex-shrink: 0; }
 .series-config-input { flex: 1; display: flex; align-items: center; gap: 4px; padding: 0 12px; height: 44px; border-radius: 10px; background: var(--bg-elevated); border: 1px solid var(--border-subtle); }
+
+/* Settings panel */
+.settings-modal { max-height: 70vh; }
+.settings-list { display: flex; flex-direction: column; gap: 2px; margin-top: 8px; }
+.settings-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--border-subtle); }
+.settings-item:last-child { border-bottom: none; }
+.settings-item-left { display: flex; align-items: center; gap: 12px; font-size: 15px; color: var(--text-primary); }
+.settings-item.danger .settings-item-left span { color: var(--accent-coral); }
+.settings-toggle-group { display: flex; border-radius: 10px; overflow: hidden; border: 1px solid var(--border-subtle); }
+.settings-unit-btn { padding: 6px 16px; font-size: 14px; font-weight: 600; background: transparent; color: var(--text-secondary); cursor: pointer; transition: all .2s; }
+.settings-unit-btn.active { background: var(--accent-blue); color: #FFF; }
+.settings-action-btn { padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; background: var(--bg-elevated); color: var(--text-secondary); border: 1px solid var(--border-subtle); cursor: pointer; }
+.settings-action-btn.danger { color: var(--accent-coral); border-color: rgba(244,63,94,.3); }
+.settings-confirm-group { display: flex; gap: 8px; }
+.settings-confirm-btn { padding: 6px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.settings-confirm-btn.yes { background: var(--accent-green); color: #FFF; }
+.settings-confirm-btn.yes.danger { background: var(--accent-coral); }
+.settings-confirm-btn.no { background: var(--bg-elevated); color: var(--text-secondary); border: 1px solid var(--border-subtle); }
+.settings-footer { margin-top: 20px; text-align: center; }
+.settings-version { font-size: 12px; color: var(--text-muted); }
 .series-config-input input { flex: 1; background: none; border: none; color: var(--text-primary); font-size: 15px; font-weight: 500; height: auto; padding: 0; width: 40px; }
 .series-config-input span { font-size: 12px; color: var(--text-muted); }
 

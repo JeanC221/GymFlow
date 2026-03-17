@@ -43,7 +43,7 @@ function SortableExercise({ exercise, index, ...props }) {
   );
 }
 
-export default function DayDetail({ day, onBack, onUpdateDay }) {
+export default function DayDetail({ day, onBack, onUpdateDay, weightUnit }) {
   const [showAddExercise, setShowAddExercise] = useState(false);
   const [editingExercise, setEditingExercise] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
@@ -168,6 +168,7 @@ export default function DayDetail({ day, onBack, onUpdateDay }) {
                     key={ex.id}
                     exercise={ex}
                     index={i}
+                    weightUnit={weightUnit}
                     onToggleSeries={handleToggleSeries}
                     onUpdateSeries={handleUpdateSeries}
                     onAddSeries={handleAddSeries}

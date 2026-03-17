@@ -31,6 +31,7 @@ export function SwipeableItem({ children, onEdit, onDelete }) {
     if (!swiping.current) return;
     currentX.current = e.touches[0].clientX;
     const diff = startX.current - currentX.current;
+    if (Math.abs(diff) > 10) e.preventDefault();
     const clamped = Math.max(0, Math.min(140, diff));
     setOffset(clamped);
   };
