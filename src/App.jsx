@@ -90,7 +90,7 @@ export default function App() {
       setDays(prev =>
         prev.map(d =>
           d.id === editingDay.id
-            ? { ...d, name: data.name, routine: data.routine, isRestDay: data.isRestDay, notes: data.notes, emoji: data.emoji || '' }
+            ? { ...d, name: data.name, routine: data.routine, isRestDay: data.isRestDay, notes: data.notes }
             : d
         )
       );
@@ -98,7 +98,6 @@ export default function App() {
     } else {
       const newDay = createDay(data.name, data.routine, data.isRestDay);
       newDay.notes = data.notes || '';
-      newDay.emoji = data.emoji || '';
       setDays(prev => [...prev, newDay]);
     }
   };

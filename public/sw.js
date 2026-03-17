@@ -1,16 +1,16 @@
-const CACHE_NAME = 'mi-rutina-v1';
-const ASSETS = [
+const CACHE_NAME = 'mi-rutina-v2';
+const PRECACHE = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/favicon.svg',
+  '/logo.svg',
   '/icons/icon-192.png',
   '/icons/icon-512.png'
 ];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(PRECACHE))
   );
   self.skipWaiting();
 });
@@ -26,18 +26,53 @@ self.addEventListener('activate', (e) => {
 
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
-  e.respondWith(
-    caches.match(e.request).then((cached) => {
-      const fetchPromise = fetch(e.request)
+
+  const url = new URL(e.request.url);
+
+  // Skip external requests (fonts, analytics, etc.)
+  if (url.origin !== location.origin) return;
+
+  // For navigation requests (HTML pages), use network-first
+  if (e.request.mode === 'navigate') {
+    e.respondWith(
+      fetch(e.request)
         .then((response) => {
-          if (response && response.status === 200 && response.type === 'basic') {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(e.request, clone));
+          return response;
+        })
+        .catch(() => caches.match('/index.html'))
+    );
+    return;
+  }
+
+  // For JS/CSS/assets with hashed filenames — cache-first (they're immutable)
+  if (url.pathname.startsWith('/assets/')) {
+    e.respondWith(
+      caches.match(e.request).then((cached) => {
+        if (cached) return cached;
+        return fetch(e.request).then((response) => {
+          if (response && response.status === 200) {
             const clone = response.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(e.request, clone));
           }
           return response;
-        })
-        .catch(() => cached);
-      return cached || fetchPromise;
-    })
+        });
+      })
+    );
+    return;
+  }
+
+  // For everything else — network-first with cache fallback
+  e.respondWith(
+    fetch(e.request)
+      .then((response) => {
+        if (response && response.status === 200) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(e.request, clone));
+        }
+        return response;
+      })
+      .catch(() => caches.match(e.request))
   );
 });

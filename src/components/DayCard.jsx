@@ -23,14 +23,9 @@ export default function DayCard({ day, index, onClick, onEdit, onDelete, onDupli
       className={`day-card ${day.isRestDay ? 'rest-day' : ''}`}
       onClick={onClick}
     >
-      {/* Emoji avatar */}
-      {day.emoji ? (
-        <div className="day-card-avatar">{day.emoji}</div>
-      ) : (
-        <div className="day-card-avatar day-card-avatar-default" style={{ color: badgeColor.text, background: badgeColor.bg }}>
-          {day.isRestDay ? <Moon size={18} /> : <Dumbbell size={18} />}
-        </div>
-      )}
+      <div className="day-card-avatar day-card-avatar-default" style={{ color: badgeColor.text, background: badgeColor.bg }}>
+        {day.isRestDay ? <Moon size={18} /> : <Dumbbell size={18} />}
+      </div>
 
       <div className="day-card-content">
         <div className="day-card-name">{day.name}</div>

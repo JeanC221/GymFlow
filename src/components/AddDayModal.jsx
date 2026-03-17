@@ -1,14 +1,11 @@
 import { useState, useEffect } from 'react';
 import { X, Moon } from 'lucide-react';
 
-const DAY_EMOJIS = ['💪', '🦵', '🏋️', '🤸', '🏃', '🔥', '⚡', '🎯', '💥', '🧘', '🚴', '🏆', '❤️', '🦾', '🫁', '🧠'];
-
 export default function AddDayModal({ onClose, onSave, editDay }) {
   const [name, setName] = useState('');
   const [routine, setRoutine] = useState('');
   const [isRestDay, setIsRestDay] = useState(false);
   const [notes, setNotes] = useState('');
-  const [emoji, setEmoji] = useState('');
   const [closing, setClosing] = useState(false);
 
   useEffect(() => {
@@ -17,7 +14,6 @@ export default function AddDayModal({ onClose, onSave, editDay }) {
       setRoutine(editDay.routine);
       setIsRestDay(editDay.isRestDay);
       setNotes(editDay.notes || '');
-      setEmoji(editDay.emoji || '');
     }
   }, [editDay]);
 
@@ -28,7 +24,7 @@ export default function AddDayModal({ onClose, onSave, editDay }) {
 
   const handleSave = () => {
     if (!name.trim()) return;
-    onSave({ name: name.trim(), routine: routine.trim(), isRestDay, notes: notes.trim(), emoji });
+    onSave({ name: name.trim(), routine: routine.trim(), isRestDay, notes: notes.trim() });
     handleClose();
   };
 
@@ -72,22 +68,6 @@ export default function AddDayModal({ onClose, onSave, editDay }) {
               onClick={() => setIsRestDay(!isRestDay)}
             >
               <div className="toggle-thumb" />
-            </div>
-          </div>
-          <div className="field">
-            <label className="field-label">Ícono (opcional)</label>
-            <div className="emoji-picker">
-              <button
-                className={`emoji-option ${emoji === '' ? 'active' : ''}`}
-                onClick={() => setEmoji('')}
-              >—</button>
-              {DAY_EMOJIS.map(e => (
-                <button
-                  key={e}
-                  className={`emoji-option ${emoji === e ? 'active' : ''}`}
-                  onClick={() => setEmoji(e)}
-                >{e}</button>
-              ))}
             </div>
           </div>
           <div className="field">
