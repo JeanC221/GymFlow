@@ -347,6 +347,7 @@ export default function App() {
           onClose={() => { setShowAddDay(false); setEditingDay(null); }}
           onSave={handleSaveDay}
           editDay={editingDay}
+          usedDays={days.map(d => d.name)}
         />
       )}
 

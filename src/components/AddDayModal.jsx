@@ -1,12 +1,18 @@
 import { useState, useEffect } from 'react';
-import { X, Moon } from 'lucide-react';
+import { X, Moon, ChevronDown } from 'lucide-react';
 
-export default function AddDayModal({ onClose, onSave, editDay }) {
+const WEEKDAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+
+export default function AddDayModal({ onClose, onSave, editDay, usedDays = [] }) {
   const [name, setName] = useState('');
   const [routine, setRoutine] = useState('');
   const [isRestDay, setIsRestDay] = useState(false);
   const [notes, setNotes] = useState('');
   const [closing, setClosing] = useState(false);
+  const [showDayPicker, setShowDayPicker] = useState(false);
+
+  // Days already used (exclude current day if editing)
+  const takenDays = usedDays.filter(d => !editDay || d !== editDay.name);
 
   useEffect(() => {
     if (editDay) {
@@ -38,14 +44,31 @@ export default function AddDayModal({ onClose, onSave, editDay }) {
         </div>
         <div className="form-fields">
           <div className="field">
-            <label className="field-label">Nombre del día</label>
-            <input
-              type="text"
-              placeholder="Ej: Lunes"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              autoFocus
-            />
+            <label className="field-label">Día de la semana</label>
+            <div className="day-select" onClick={() => setShowDayPicker(!showDayPicker)}>
+              <span className={name ? '' : 'day-select-placeholder'}>
+                {name || 'Selecciona un día'}
+              </span>
+              <ChevronDown size={18} color="var(--text-secondary)" style={{ transform: showDayPicker ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+            </div>
+            {showDayPicker && (
+              <div className="day-picker-list">
+                {WEEKDAYS.map(day => {
+                  const taken = takenDays.includes(day);
+                  return (
+                    <button
+                      key={day}
+                      className={`day-picker-item${name === day ? ' active' : ''}${taken ? ' taken' : ''}`}
+                      onClick={() => { if (!taken) { setName(day); setShowDayPicker(false); } }}
+                      disabled={taken}
+                    >
+                      {day}
+                      {taken && <span className="day-picker-taken">En uso</span>}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
           {!isRestDay && (
             <div className="field">

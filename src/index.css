@@ -212,6 +212,49 @@ button { border: none; background: none; cursor: pointer; font-family: 'DM Sans'
 .search-bar input { border: none; background: none; height: 36px; padding: 0; font-size: 14px; flex: 1; }
 .search-bar input:focus { border: none; }
 
+/* Day selector dropdown */
+.day-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  height: 48px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--text-primary);
+  transition: border-color 0.2s;
+}
+.day-select:active { border-color: var(--accent-blue); }
+.day-select-placeholder { color: var(--text-muted); }
+.day-picker-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--bg-elevated);
+  border-radius: 12px;
+  padding: 4px;
+  margin-top: 4px;
+  border: 1px solid var(--border-subtle);
+}
+.day-picker-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 15px;
+  color: var(--text-primary);
+  text-align: left;
+  transition: background 0.15s;
+}
+.day-picker-item:active { background: var(--border-subtle); }
+.day-picker-item.active { background: var(--accent-blue); color: #FFF; }
+.day-picker-item.taken { opacity: 0.4; cursor: not-allowed; }
+.day-picker-taken { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+
 /* Day drag handle */
 .day-drag-handle { cursor: grab; touch-action: none; padding: 4px; color: var(--text-muted); display: flex; align-items: center; position: absolute; left: -2px; top: 50%; transform: translateY(-50%); z-index: 2; }
 .day-drag-handle:active { cursor: grabbing; }
