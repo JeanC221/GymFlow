@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { X, Trash2, RotateCcw, Weight, Palette } from 'lucide-react';
+import { X, Trash2, RotateCcw, Weight, Sun, Moon } from 'lucide-react';
 
-export default function SettingsPanel({ onClose, onClearAll, onResetSeries, weightUnit, onChangeUnit }) {
+export default function SettingsPanel({ onClose, onClearAll, onResetSeries, weightUnit, onChangeUnit, theme, onChangeTheme }) {
   const [confirmClear, setConfirmClear] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
 
@@ -14,6 +14,24 @@ export default function SettingsPanel({ onClose, onClearAll, onResetSeries, weig
         </div>
 
         <div className="settings-list">
+          {/* Theme */}
+          <div className="settings-item">
+            <div className="settings-item-left">
+              {theme === 'dark' ? <Moon size={20} color="var(--accent-indigo)" /> : <Sun size={20} color="var(--accent-amber)" />}
+              <span>Tema</span>
+            </div>
+            <div className="settings-toggle-group">
+              <button
+                className={`settings-unit-btn ${theme === 'dark' ? 'active' : ''}`}
+                onClick={() => onChangeTheme('dark')}
+              >Oscuro</button>
+              <button
+                className={`settings-unit-btn ${theme === 'light' ? 'active' : ''}`}
+                onClick={() => onChangeTheme('light')}
+              >Claro</button>
+            </div>
+          </div>
+
           {/* Weight unit */}
           <div className="settings-item">
             <div className="settings-item-left">

@@ -189,3 +189,59 @@ button { border: none; background: none; cursor: pointer; font-family: 'DM Sans'
 .drag-handle:active { cursor: grabbing; }
 
 .exercise-list { display: flex; flex-direction: column; gap: 16px; padding: 16px 24px 100px; }
+
+/* Light theme */
+[data-theme="light"] {
+  --bg-page: #F5F5F7;
+  --bg-card: #FFFFFF;
+  --bg-elevated: #ECECEE;
+  --text-primary: #1A1A1E;
+  --text-secondary: #6B6B70;
+  --text-muted: #9A9A9E;
+  --border-subtle: #E0E0E4;
+  --border-strong: #CCCCD0;
+  --rest-day: #E85A4F22;
+}
+[data-theme="light"] .modal-overlay { background: #F5F5F7CC; }
+[data-theme="light"] .confirm-overlay { background: #F5F5F7DD; }
+[data-theme="light"] .fab { box-shadow: 0 8px 24px #3B82F644; }
+[data-theme="light"] .swipeable-content { background: var(--bg-card); }
+
+/* Search bar */
+.search-bar { display: flex; align-items: center; gap: 8px; margin: 0 24px 8px; padding: 0 14px; height: 44px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 12px; }
+.search-bar input { border: none; background: none; height: 36px; padding: 0; font-size: 14px; flex: 1; }
+.search-bar input:focus { border: none; }
+
+/* Day drag handle */
+.day-drag-handle { cursor: grab; touch-action: none; padding: 4px; color: var(--text-muted); display: flex; align-items: center; position: absolute; left: -2px; top: 50%; transform: translateY(-50%); z-index: 2; }
+.day-drag-handle:active { cursor: grabbing; }
+
+/* Day card notes badge */
+.day-card-badges { display: flex; align-items: center; gap: 6px; margin-top: 2px; }
+
+/* Duplicate swipe action */
+.swipe-action.duplicate { background: var(--accent-indigo); }
+.swipe-action { width: 56px; }
+
+/* Completion animation */
+@keyframes celebrate { 0% { box-shadow: 0 0 0 0 rgba(50,213,131,0.4); } 50% { box-shadow: 0 0 0 8px rgba(50,213,131,0); } 100% { box-shadow: none; } }
+@keyframes checkPop { 0% { transform: scale(0.8); } 50% { transform: scale(1.15); } 100% { transform: scale(1); } }
+.exercise-card.all-complete { animation: celebrate 0.6s ease-out; border: 1px solid var(--accent-green); }
+.exercise-card.all-complete .exercise-header-left span { color: var(--accent-green); }
+.check-box.just-checked { animation: checkPop 0.3s ease-out; }
+
+/* Day notes banner */
+.day-notes-banner { display: flex; align-items: center; gap: 8px; margin: 0 24px 8px; padding: 10px 14px; background: var(--bg-card); border-radius: 10px; border: 1px solid var(--border-subtle); font-size: 13px; font-style: italic; color: var(--text-secondary); }
+
+/* Progress chart */
+.progress-picker { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--bg-elevated); border-radius: 10px; cursor: pointer; font-size: 15px; font-weight: 600; }
+.progress-picker-list { display: flex; flex-direction: column; gap: 2px; max-height: 160px; overflow-y: auto; background: var(--bg-elevated); border-radius: 10px; padding: 4px; }
+.progress-picker-item { padding: 10px 14px; border-radius: 8px; text-align: left; font-size: 14px; color: var(--text-secondary); }
+.progress-picker-item.active { background: var(--accent-blue); color: #FFF; }
+.progress-chart { padding: 8px 0; }
+.progress-bars { display: flex; align-items: flex-end; gap: 8px; height: 160px; padding: 0 4px; }
+.progress-bar-col { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; min-width: 0; }
+.progress-bar-value { font-size: 10px; font-weight: 600; color: var(--text-secondary); white-space: nowrap; }
+.progress-bar { width: 100%; max-width: 32px; background: var(--gradient-fab); border-radius: 6px 6px 0 0; transition: height 0.3s ease; }
+.progress-bar-label { font-size: 9px; color: var(--text-muted); white-space: nowrap; }
+.progress-summary { display: flex; align-items: center; gap: 6px; margin-top: 12px; padding: 8px 12px; background: var(--bg-elevated); border-radius: 8px; font-size: 12px; color: var(--text-secondary); }

@@ -5,6 +5,7 @@ export default function AddDayModal({ onClose, onSave, editDay }) {
   const [name, setName] = useState('');
   const [routine, setRoutine] = useState('');
   const [isRestDay, setIsRestDay] = useState(false);
+  const [notes, setNotes] = useState('');
   const [closing, setClosing] = useState(false);
 
   useEffect(() => {
@@ -12,6 +13,7 @@ export default function AddDayModal({ onClose, onSave, editDay }) {
       setName(editDay.name);
       setRoutine(editDay.routine);
       setIsRestDay(editDay.isRestDay);
+      setNotes(editDay.notes || '');
     }
   }, [editDay]);
 
@@ -22,7 +24,7 @@ export default function AddDayModal({ onClose, onSave, editDay }) {
 
   const handleSave = () => {
     if (!name.trim()) return;
-    onSave({ name: name.trim(), routine: routine.trim(), isRestDay });
+    onSave({ name: name.trim(), routine: routine.trim(), isRestDay, notes: notes.trim() });
     handleClose();
   };
 
@@ -67,6 +69,14 @@ export default function AddDayModal({ onClose, onSave, editDay }) {
             >
               <div className="toggle-thumb" />
             </div>
+          </div>
+          <div className="field">
+            <label className="field-label">Notas (opcional)</label>
+            <textarea
+              placeholder="Ej: Semana de descarga, sentirme flojo..."
+              value={notes}
+              onChange={e => setNotes(e.target.value)}
+            />
           </div>
         </div>
         <button className="btn-primary" onClick={handleSave} disabled={!name.trim()}>

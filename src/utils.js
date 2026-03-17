@@ -14,7 +14,21 @@ export function createDay(name, routine, isRestDay) {
     name,
     routine: isRestDay ? '' : routine,
     isRestDay,
+    notes: '',
     exercises: [],
+  };
+}
+
+export function cloneDay(day) {
+  return {
+    ...day,
+    id: createId(),
+    name: `${day.name} (copia)`,
+    exercises: day.exercises.map(ex => ({
+      ...ex,
+      id: createId(),
+      series: ex.series.map(s => ({ ...s, id: createId(), completed: false })),
+    })),
   };
 }
 

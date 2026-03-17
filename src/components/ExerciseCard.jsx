@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Dumbbell, ChevronUp, ChevronDown, MessageSquare, StickyNote, Plus, Check } from 'lucide-react';
 import { getExerciseColor, getExerciseSummary } from '../utils';
 import { SwipeableItem } from './ConfirmDialog';
@@ -14,11 +14,30 @@ export default function ExerciseCard({
   onDelete,
 }) {
   const [expanded, setExpanded] = useState(index === 0);
+  const [justChecked, setJustChecked] = useState(null);
   const color = getExerciseColor(index);
   const summary = getExerciseSummary(exercise, weightUnit);
+  const allComplete = exercise.series.length > 0 && exercise.series.every(s => s.completed);
+  const prevAllComplete = useRef(allComplete);
+  const [showCelebrate, setShowCelebrate] = useState(false);
+
+  useEffect(() => {
+    if (allComplete && !prevAllComplete.current) {
+      setShowCelebrate(true);
+      const t = setTimeout(() => setShowCelebrate(false), 600);
+      return () => clearTimeout(t);
+    }
+    prevAllComplete.current = allComplete;
+  }, [allComplete]);
+
+  const handleToggle = (exerciseId, seriesId) => {
+    setJustChecked(seriesId);
+    onToggleSeries(exerciseId, seriesId);
+    setTimeout(() => setJustChecked(null), 300);
+  };
 
   const content = (
-    <div className="exercise-card">
+    <div className={`exercise-card${showCelebrate ? ' all-complete' : ''}`}>
       <div className="exercise-header" onClick={() => setExpanded(!expanded)}>
         <div className="exercise-header-left">
           <Dumbbell size={18} color={color} />
@@ -66,8 +85,8 @@ export default function ExerciseCard({
                 />
                 <span className="series-col-spacer" />
                 <div
-                  className={`check-box ${s.completed ? 'checked' : ''}`}
-                  onClick={() => onToggleSeries(exercise.id, s.id)}
+                  className={`check-box ${s.completed ? 'checked' : ''}${justChecked === s.id ? ' just-checked' : ''}`}
+                  onClick={() => handleToggle(exercise.id, s.id)}
                 >
                   {s.completed && <Check size={14} color="#FFFFFF" />}
                 </div>

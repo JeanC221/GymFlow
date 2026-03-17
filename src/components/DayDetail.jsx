@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Plus, GripVertical } from 'lucide-react';
+import { ArrowLeft, Plus, GripVertical, StickyNote } from 'lucide-react';
 import ExerciseCard from './ExerciseCard';
 import EmptyState from './EmptyState';
 import AddExerciseModal from './AddExerciseModal';
@@ -43,7 +43,7 @@ function SortableExercise({ exercise, index, ...props }) {
   );
 }
 
-export default function DayDetail({ day, onBack, onUpdateDay, weightUnit }) {
+export default function DayDetail({ day, onBack, onUpdateDay, weightUnit, theme }) {
   const [showAddExercise, setShowAddExercise] = useState(false);
   const [editingExercise, setEditingExercise] = useState(null);
   const [confirmDelete, setConfirmDelete] = useState(null);
@@ -143,7 +143,7 @@ export default function DayDetail({ day, onBack, onUpdateDay, weightUnit }) {
   };
 
   return (
-    <div className="screen">
+    <div className="screen" data-theme={theme}>
       <div className="header">
         <div className="header-back">
           <button onClick={onBack} style={{ padding: 4 }}>
@@ -155,6 +155,13 @@ export default function DayDetail({ day, onBack, onUpdateDay, weightUnit }) {
           </div>
         </div>
       </div>
+
+      {day.notes && (
+        <div className="day-notes-banner">
+          <StickyNote size={14} color="var(--accent-amber)" />
+          <span>{day.notes}</span>
+        </div>
+      )}
 
       {day.exercises.length === 0 ? (
         <EmptyState type="exercises" />
